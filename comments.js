@@ -1,34 +1,37 @@
 // create web server
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+// create a web server that takes a request and responds with a JSON object.
+// The server should listen on port 8080.
 
-const server = http.createServer((req, res) => {
-  if (req.url === "/comments") {
-    fs.readFile(path.join(__dirname, "comments.json"), "utf8", (err, data) => {
-      if (err) {
-        res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Server error" }));
-      } else {
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(data);
-      }
-    });
-  } else {
-    res.writeHead(404, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Resource not found" }));
+var http = require("http");
+var url = require("url");
+
+var server = http.createServer(function (req, res) {
+  // parse the url
+  var urlObj = url.parse(req.url, true);
+  var pathname = urlObj.pathname;
+  var query = urlObj.query;
+  var iso = query.iso;
+  var date = new Date(iso);
+
+  if (pathname === "/api/parsetime") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        second: date.getSeconds(),
+      })
+    );
+  }
+
+  if (pathname === "/api/unixtime") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        unixtime: date.getTime(),
+      })
+    );
   }
 });
 
-server.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
-
-// Path: comments.json
-[
-  {
-    id: 1,
-    name: "John Doe",
-    email: "test@test.com",
-  },
-];
+server.listen(8080);
