@@ -1,37 +1,23 @@
 // create web server
-// create a web server that takes a request and responds with a JSON object.
-// The server should listen on port 8080.
-
-var http = require("http");
-var url = require("url");
-
-var server = http.createServer(function (req, res) {
-  // parse the url
-  var urlObj = url.parse(req.url, true);
-  var pathname = urlObj.pathname;
-  var query = urlObj.query;
-  var iso = query.iso;
-  var date = new Date(iso);
-
-  if (pathname === "/api/parsetime") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        hour: date.getHours(),
-        minute: date.getMinutes(),
-        second: date.getSeconds(),
-      })
-    );
-  }
-
-  if (pathname === "/api/unixtime") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        unixtime: date.getTime(),
-      })
-    );
-  }
+const express = require("express");
+const app = express();
+// create route
+app.get("/comments", (req, res) => {
+  res.json({ comments: [1, 2, 3, 4, 5] });
 });
+// start server
+app.listen(3000, () => {
+  console.log("Server started at http://localhost:3000");
+});
+// Path: index.js
+// create web server
+const express = require("express");
 
-server.listen(8080);
+// create route
+app.get("/", (req, res) => {
+  res.json({ message: "Hello, world!" });
+});
+// start server
+app.listen(3000, () => {
+  console.log("Server started at http://localhost:3000");
+});
