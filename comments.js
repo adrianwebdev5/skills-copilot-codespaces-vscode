@@ -11,7 +11,7 @@ app.listen(3000, () => {
 });
 // Path: index.js
 // create web server
-const express = require("express");
+const CreateWebServer = require("express");
 
 // create route
 app.get("/", (req, res) => {
